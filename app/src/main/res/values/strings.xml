@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">NT_Taxi</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="enter_current_place">Enter Current Place</string>
+    <string name="enter_distination_place">Enter Distination Place</string>
+    <string name="go">Go</string>
+    <string name="from_to"><![CDATA[From & To]]></string>
+    <string name="textview">TextView</string>
+</resources>

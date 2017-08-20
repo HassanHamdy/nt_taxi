@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:background="#c6c6c6">
+
+    <TextView
+        android:padding="24dp"
+        android:id="@+id/title"
+        android:background="#7c7c7c"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/from_to"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <AutoCompleteTextView
+        android:id="@+id/CurrentPlace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_current_place"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:maxLines="2"
+        android:textStyle="bold"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true" />
+
+    <AutoCompleteTextView
+        android:id="@+id/PlaceWantToGo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:maxLines="2"
+        android:hint="@string/enter_distination_place"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/CurrentPlace"
+        android:layout_marginTop="46dp" />
+
+    <Button
+        android:id="@+id/GoToPlace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="casual"
+        android:text="@string/go"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="59dp"
+        android:layout_below="@+id/PlaceWantToGo"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
