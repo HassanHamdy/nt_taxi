@@ -5,7 +5,10 @@
     android:background="@color/colorAccentTrans"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="48dp">
+    android:paddingBottom="48dp"
+    android:paddingLeft="48dp"
+    android:paddingRight="48dp"
+    android:paddingTop="20dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -33,7 +36,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:textColorHint="@android:color/black">
 
         <android.support.design.widget.TextInputEditText
@@ -49,7 +52,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:textColorHint="@android:color/black">
 
         <android.support.design.widget.TextInputEditText
@@ -64,7 +67,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:textColorHint="@android:color/black">
 
         <android.support.design.widget.TextInputEditText
@@ -81,7 +84,7 @@
         android:id="@+id/signUpUserCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <RadioButton
@@ -89,9 +92,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:buttonTint="@android:color/black"
             android:text="client"
             android:textAlignment="center"
-            android:buttonTint="@android:color/black"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -102,15 +105,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:buttonTint="@android:color/black"
             android:text="driver"
             android:textAlignment="center"
-            android:buttonTint="@android:color/black"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
 
     </RadioGroup>
+
+    <Spinner
+        android:id="@+id/governorate_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:popupBackground="#006359"
+        android:textAlignment="center"
+        android:textColor="#000000" />
 
 
     <Button

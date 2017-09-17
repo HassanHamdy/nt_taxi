@@ -1,9 +1,6 @@
 package com.example.owner.nt_taxi.View;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.owner.nt_taxi.Controller.Network.RecyclerViewAdapter;
+import com.example.owner.nt_taxi.Controller.Adapter.RecyclerViewAdapter;
 import com.example.owner.nt_taxi.Controller.Network.RequestCallback;
 import com.example.owner.nt_taxi.Controller.Network.Services;
 import com.example.owner.nt_taxi.Model.HistoryList;
 import com.example.owner.nt_taxi.Model.RideListParser;
-import com.example.owner.nt_taxi.Model.loginRootObject;
 import com.example.owner.nt_taxi.R;
 import com.google.gson.Gson;
 
@@ -53,7 +49,7 @@ public class History extends BaseFragment {
                                 Rides.getRidelist().get(i).getDroplocation(),
                                 Rides.getRidelist().get(i).getAccept()));
 
-                        HistoryRecyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+                        HistoryRecyclerView = view.findViewById(R.id.RecyclerView);
 
                         recyclerViewAdapter = new RecyclerViewAdapter(getActivity(),Data);
                         HistoryRecyclerView.setAdapter(recyclerViewAdapter);

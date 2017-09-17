@@ -1,14 +1,10 @@
 package com.example.owner.nt_taxi.Controller.Network;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.owner.nt_taxi.Model.Location;
 import com.example.owner.nt_taxi.Model.constants_class;
-import com.example.owner.nt_taxi.R;
-import com.example.owner.nt_taxi.View.splashScreen;
 import com.google.android.gms.maps.model.LatLng;
-
 
 import java.util.HashMap;
 
@@ -16,7 +12,7 @@ import java.util.HashMap;
 
 public class Services {
 
-    private static String url = "http://webldm.net:8080/";
+    private static String url = "http://192.168.61.2/nt_taxi_BackEnd/";
 
 
     public static void Login(String email, String password, String category,
@@ -31,7 +27,7 @@ public class Services {
     }
 
     public static void Register(String name, String email, String password, String number,
-                                String category, RequestCallback requestCallback,Context context){
+                                String category, String location, RequestCallback requestCallback, Context context) {
 
         HashMap<String,String> values = new HashMap<>();
         values.put("name",name);
@@ -39,6 +35,7 @@ public class Services {
         values.put("password",password);
         values.put("number",number);
         values.put("category",category);
+        values.put("location", location + ", Egypt");
 
         BaseRequest.DoPost(values,requestCallback, url + "registration.php",context);
 
@@ -92,7 +89,20 @@ public class Services {
 
         BaseRequest.DoPost(values,requestCallback, url + "user-rides-list.php",context);
 
+    }
 
 
+    public static void Update_Profile(String email, String name, String location, String encoded,
+                                      RequestCallback requestCallback, Context context) {
+
+        HashMap<String, String> values = new HashMap<>();
+        values.put("token", constants_class.sharedPreferences.getString(constants_class.Token, ""));
+        values.put("name", name);
+        values.put("email", email);
+        values.put("location", location + ", Egypt");
+        values.put("encoded_string", encoded);
+        values.put("ID", constants_class.sharedPreferences.getString(constants_class.UserID, ""));
+
+        BaseRequest.DoPost(values, requestCallback, url + "UpdateProfile.php", context);
     }
 }

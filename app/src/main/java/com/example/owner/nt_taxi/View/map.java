@@ -11,35 +11,30 @@ import android.location.Criteria;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.owner.nt_taxi.Controller.Network.PlaceAutocompleteAdapter;
+import com.example.owner.nt_taxi.Controller.Adapter.PlaceAutocompleteAdapter;
+import com.example.owner.nt_taxi.Controller.Network.RequestCallback;
+import com.example.owner.nt_taxi.Controller.Network.Services;
 import com.example.owner.nt_taxi.Model.DriverLocations;
 import com.example.owner.nt_taxi.Model.Location;
 import com.example.owner.nt_taxi.Model.getLocationParser.GetRouteOnMap;
-import com.example.owner.nt_taxi.Model.getLocationParser.Leg;
 import com.example.owner.nt_taxi.Model.loginRootObject;
 import com.example.owner.nt_taxi.R;
-import com.example.owner.nt_taxi.Controller.Network.RequestCallback;
-import com.example.owner.nt_taxi.Controller.Network.Services;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -58,34 +53,32 @@ import com.google.gson.Gson;
 import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 
 public class map extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener,
         GoogleMap.OnInfoWindowClickListener, LocationListener {
+    private final static int MY_PERMISSION_FINE_LOCATION = 101;
+    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
+            new LatLng(22.041458, 24.790100), new LatLng(33.682247, 36.383362));
+    public View view;
+    public Marker M_current, M_destination;
+    public android.location.Location myLoc;
+    public LocationManager locationManager;
+    public GoogleApiClient mGoogleApiClient;
     private GoogleMap googleMap;
     private MapView mapView;
-    public View view;
     private FloatingActionButton floatingActionButton;
-    private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private String totalDistance,totalDuration;
     private int PLACE_AUTOCOMPLETE_CURRENT_REQUEST_CODE = 1;
     private int PLACE_AUTOCOMPLETE_DESTINATION_REQUEST_CODE = 2;
     private ArrayList<Location> locations = null;
     private Polyline polyline;
-    public Marker M_current,M_destination;
-    public android.location.Location myLoc;
-    public LocationManager locationManager;
     private String FromLocation,ToLocation;
-
-
-    public GoogleApiClient mGoogleApiClient;
     private PlaceAutocompleteAdapter mCurrentAdapter,mDestinationAdapter;
     private AutoCompleteTextView mCurrentAutocompleteView,mDestinationAutocompleteView;
-    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-            new LatLng(22.041458, 24.790100), new LatLng(33.682247, 36.383362));
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,11 +127,9 @@ public class map extends BaseFragment implements OnMapReadyCallback, GoogleMap.O
         dialog.setContentView(R.layout.custom_dialog);
 
         // Retrieve the AutoCompleteTextView that will display Place suggestions.
-        mCurrentAutocompleteView = (AutoCompleteTextView)
-                dialog.findViewById(R.id.CurrentPlace);
+        mCurrentAutocompleteView = dialog.findViewById(R.id.CurrentPlace);
 
-        mDestinationAutocompleteView = (AutoCompleteTextView)
-                dialog.findViewById(R.id.PlaceWantToGo);
+        mDestinationAutocompleteView = dialog.findViewById(R.id.PlaceWantToGo);
 
 //                // Register a listener that receives callbacks when a suggestion has been selected
 //                mCurrentAutocompleteView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -200,7 +191,7 @@ public class map extends BaseFragment implements OnMapReadyCallback, GoogleMap.O
 //                    }
 //                });
 //
-        Button dialogButton = (Button) dialog.findViewById(R.id.GoToPlace);
+        Button dialogButton = dialog.findViewById(R.id.GoToPlace);
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,7 +346,7 @@ public class map extends BaseFragment implements OnMapReadyCallback, GoogleMap.O
             }
         },getActivity());
 
-        locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria,true);
 

@@ -2,32 +2,35 @@ package com.example.owner.nt_taxi.View;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.percent.PercentLayoutHelper;
 import android.support.percent.PercentRelativeLayout;
-import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.owner.nt_taxi.Controller.Network.RequestCallback;
+import com.example.owner.nt_taxi.Controller.Network.Services;
 import com.example.owner.nt_taxi.Model.RegistrationParser;
 import com.example.owner.nt_taxi.Model.constants_class;
 import com.example.owner.nt_taxi.Model.loginRootObject;
 import com.example.owner.nt_taxi.R;
-import com.example.owner.nt_taxi.Controller.Network.RequestCallback;
-import com.example.owner.nt_taxi.Controller.Network.Services;
 import com.google.gson.Gson;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
     private TextView tvSignupInvoker;
     private LinearLayout llSignup;
     private TextView tvSigninInvoker;
@@ -41,6 +44,8 @@ public class MainActivity extends BaseActivity{
     private String category;
     private Pattern pattern;
     private Matcher matcher;
+    private String location;
+    private Spinner spinner;
 
 
 
@@ -182,8 +187,14 @@ public class MainActivity extends BaseActivity{
                                     editor.putString(constants_class.UserName, Root.getInfo().get(0).getName());
                                     editor.putString(constants_class.UserID, Root.getInfo().get(0).getId());
                                     editor.putString(constants_class.Number, Root.getInfo().get(0).getNumber());
+                                    editor.putString(constants_class.Image, Root.getInfo().get(0).getImage());
+                                    editor.putString(constants_class.Email, Root.getInfo().get(0).getEmail());
+                                    editor.putString(constants_class.Location, Root.getInfo().get(0).getLocation());
+                                    editor.putString(constants_class.Category, Root.getInfo().get(0).getCategory());
                                     editor.putBoolean(constants_class.isLoggedIn, true);
                                     editor.apply();
+
+
                                     startActivity(new Intent(MainActivity.this,HomePage.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                     finish();
 
@@ -209,6 +220,16 @@ public class MainActivity extends BaseActivity{
 
     public void SignOutBTN_handler(){
 
+        spinner = (Spinner) findViewById(R.id.governorate_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(MainActivity.this,
+                R.array.governorate_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(MainActivity.this);
+
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,7 +251,7 @@ public class MainActivity extends BaseActivity{
                             pattern = Pattern.compile(constants_class.MOBILE_PATTERN);
                             matcher = pattern.matcher(signUpMobileEditTxt.getText().toString());
 
-                            if(matcher.matches()){
+                            if (true) {
 
                                 Animation clockwise= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_right_to_left);
                                 btnSignup.startAnimation(clockwise);
@@ -249,12 +270,11 @@ public class MainActivity extends BaseActivity{
                                     }
 
 
-
                                     Services.Register(signUpUsernameEditTxt.getText().toString(),
                                             signUpEmailEditTxt.getText().toString(),
                                             signUpPasswordEditTxt.getText().toString(),
                                             signUpMobileEditTxt.getText().toString(),
-                                            category, new RequestCallback() {
+                                            category, location, new RequestCallback() {
                                                 @Override
                                                 public void Success(String response) {
 
@@ -272,6 +292,10 @@ public class MainActivity extends BaseActivity{
                                                         editor.putString(constants_class.UserName, Root.getInfo().get(0).getName());
                                                         editor.putString(constants_class.UserID, Root.getInfo().get(0).getId());
                                                         editor.putString(constants_class.Number, Root.getInfo().get(0).getNumber());
+                                                        editor.putString(constants_class.Image, Root.getInfo().get(0).getImage());
+                                                        editor.putString(constants_class.Email, Root.getInfo().get(0).getEmail());
+                                                        editor.putString(constants_class.Location, Root.getInfo().get(0).getLocation());
+                                                        editor.putString(constants_class.Category, Root.getInfo().get(0).getCategory());
                                                         editor.putBoolean(constants_class.isLoggedIn, true);
                                                         editor.apply();
                                                         startActivity(new Intent(MainActivity.this,HomePage.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -288,6 +312,7 @@ public class MainActivity extends BaseActivity{
                                             }, MainActivity.this);
 
                                 }
+
 
                             }else {
                                 signUpMobileEditTxt.setError("Please Enter right fromat of mobile number");
@@ -314,4 +339,16 @@ public class MainActivity extends BaseActivity{
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        location = (String) adapterView.getItemAtPosition(i);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+        Toast.makeText(MainActivity.this, "Please choose you location", Toast.LENGTH_LONG).show();
+
+
+    }
 }

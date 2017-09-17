@@ -11,19 +11,21 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.example.owner.nt_taxi.Model.constants_class;
 import com.example.owner.nt_taxi.R;
+import com.squareup.picasso.Picasso;
 
 
 public class ProfileFragment extends BaseFragment {
     private ImageView banar1;
     private Button BtnEditProfile;
+    private com.example.owner.nt_taxi.View.customfonts.MyTextView name, job, number, email, location;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,8 +41,23 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        banar1 = (ImageView)view.findViewById(R.id.banar1);
+        banar1 = view.findViewById(R.id.banar1);
+        name = view.findViewById(R.id.fullName);
+        job = view.findViewById(R.id.job);
+        number = view.findViewById(R.id.mobileNumber);
+        email = view.findViewById(R.id.Email);
+        location = view.findViewById(R.id.Location);
+
+        name.setText(constants_class.sharedPreferences.getString(constants_class.UserName, ""));
+        job.setText(constants_class.sharedPreferences.getString(constants_class.Category, ""));
+        number.setText(constants_class.sharedPreferences.getString(constants_class.Number, ""));
+        email.setText(constants_class.sharedPreferences.getString(constants_class.Email, ""));
+        location.setText(constants_class.sharedPreferences.getString(constants_class.Location, ""));
         forCircleImage(banar1, R.drawable.white);
+
+        Picasso.with(getActivity())
+                .load("http://192.168.61.2/nt_taxi_BackEnd/" + constants_class.sharedPreferences.getString(constants_class.Image, ""))
+                .into(banar1);
 
         BtnEditProfile = view.findViewById(R.id.EditBTN);
         BtnEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +68,8 @@ public class ProfileFragment extends BaseFragment {
                 FragmentManager FG = getFragmentManager();
                 FragmentTransaction FT = FG.beginTransaction();
                 FT.replace(R.id.Fragment,frag);
+                FT.addToBackStack(null);
+                HomePage.menusItems.add("EditProfile");
                 FT.commit();
             }
         });

@@ -11,11 +11,11 @@ public class constants_class {
     public static final String Number = "MobileNumber";
     public static final String isLoggedIn = "LoginIn";
     public static final String Image = "image";
-    public static SharedPreferences sharedPreferences;
-
+    public static final String Email = "email";
+    public static final String Location = "location";
+    public static final String Category = "category";
     public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
     /**
      * ^                 # start-of-string
      (?=.*[0-9])       # a digit must occur at least once
@@ -29,8 +29,7 @@ public class constants_class {
 
     public static final String PASSWORD_PATTERN =
             "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,20}$";
-
     public static final String USERNAME_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*";
-
     public static final String MOBILE_PATTERN =  "^\\(?(?=.*[+])(\\d{3,4})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$";
+    public static SharedPreferences sharedPreferences;
 }

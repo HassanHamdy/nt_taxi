@@ -1,10 +1,10 @@
 
 package com.example.owner.nt_taxi.Model;
 
-import java.util.ArrayList;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 public class DriverLocations {
 
@@ -14,6 +14,9 @@ public class DriverLocations {
     @SerializedName("success")
     @Expose
     private Integer success;
+    @SerializedName("image")
+    @Expose
+    private String image;
 
     public ArrayList<Location> getLocation() {
         return location;
@@ -29,6 +32,14 @@ public class DriverLocations {
 
     public void setSuccess(Integer success) {
         this.success = success;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }

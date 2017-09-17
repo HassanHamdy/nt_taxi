@@ -1,12 +1,8 @@
 package com.example.owner.nt_taxi.Controller.Network;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.Window;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -19,8 +15,6 @@ import com.example.owner.nt_taxi.R;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static android.view.View.VISIBLE;
 
 
 public class BaseRequest {

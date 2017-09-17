@@ -3,10 +3,9 @@ package com.example.owner.nt_taxi.View.customfonts;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 
-public class MyTextView1 extends TextView {
+public class MyTextView1 extends android.support.v7.widget.AppCompatTextView {
 
     public MyTextView1(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);

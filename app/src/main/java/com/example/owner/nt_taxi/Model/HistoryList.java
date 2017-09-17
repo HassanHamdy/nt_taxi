@@ -1,8 +1,6 @@
 package com.example.owner.nt_taxi.Model;
 
-/**
- * Created by Owner on 8/10/2017.
- */
+
 
 public class HistoryList {
 
@@ -10,6 +8,13 @@ public class HistoryList {
     public String Location;
     public String DropLocation;
     public String Accept;
+
+    public HistoryList(String driverName, String location, String dropLocation, String accept) {
+        DriverName = driverName;
+        Location = location;
+        DropLocation = dropLocation;
+        Accept = accept;
+    }
 
     public String getDriverName() {
         return DriverName;
@@ -25,13 +30,6 @@ public class HistoryList {
 
     public String getAccept() {
         return Accept;
-    }
-
-    public HistoryList(String driverName, String location, String dropLocation, String accept) {
-        DriverName = driverName;
-        Location = location;
-        DropLocation = dropLocation;
-        Accept = accept;
     }
 
 

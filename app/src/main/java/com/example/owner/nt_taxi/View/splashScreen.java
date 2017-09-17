@@ -1,17 +1,10 @@
 package com.example.owner.nt_taxi.View;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.owner.nt_taxi.Model.constants_class;
-import com.example.owner.nt_taxi.Model.loginRootObject;
 import com.example.owner.nt_taxi.R;
-import com.example.owner.nt_taxi.Controller.Network.RequestCallback;
-import com.example.owner.nt_taxi.Controller.Network.Services;
-import com.google.gson.Gson;
 
 public class splashScreen extends BaseActivity {
 
