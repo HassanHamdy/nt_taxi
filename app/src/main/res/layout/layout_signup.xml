@@ -5,16 +5,16 @@
     android:background="@color/colorAccentTrans"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="48dp"
+    android:paddingBottom="20dp"
     android:paddingLeft="48dp"
     android:paddingRight="48dp"
-    android:paddingTop="20dp">
+    android:paddingTop="15dp">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
+        android:layout_marginBottom="20dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_user" />
 
@@ -79,50 +79,12 @@
             android:textColor="#FFF" />
     </android.support.design.widget.TextInputLayout>
 
-
-    <RadioGroup
-        android:id="@+id/signUpUserCategory"
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/register_location"
+        android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/signUpClient"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:buttonTint="@android:color/black"
-            android:text="client"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-
-        <RadioButton
-            android:id="@+id/signUpDriver"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:buttonTint="@android:color/black"
-            android:text="driver"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-
-    </RadioGroup>
-
-    <Spinner
-        android:id="@+id/governorate_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:popupBackground="#006359"
-        android:textAlignment="center"
-        android:textColor="#000000" />
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp" />
 
 
     <Button

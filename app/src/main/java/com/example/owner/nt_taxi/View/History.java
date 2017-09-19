@@ -1,5 +1,6 @@
 package com.example.owner.nt_taxi.View;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +48,8 @@ public class History extends BaseFragment {
                         Data.add(new HistoryList(Rides.getRidelist().get(i).getDriverName(),
                                 Rides.getRidelist().get(i).getLocation(),
                                 Rides.getRidelist().get(i).getDroplocation(),
-                                Rides.getRidelist().get(i).getAccept()));
+                                Rides.getRidelist().get(i).getAccept(),
+                                Rides.getRidelist().get(i).getCost()));
 
                         HistoryRecyclerView = view.findViewById(R.id.RecyclerView);
 
@@ -57,6 +59,10 @@ public class History extends BaseFragment {
                     }
                 }else {
                     Toast.makeText(getActivity(),Rides.getMessage(),Toast.LENGTH_LONG).show();
+                    if (Rides.getMessage().equals("Invalid Token !")) {
+                        startActivity(new Intent(getActivity(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        getActivity().finish();
+                    }
                 }
 
 

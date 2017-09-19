@@ -1,57 +1,75 @@
 package com.example.owner.nt_taxi.View;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.owner.nt_taxi.BuildConfig;
 import com.example.owner.nt_taxi.Controller.Network.RequestCallback;
 import com.example.owner.nt_taxi.Controller.Network.Services;
 import com.example.owner.nt_taxi.Model.constants_class;
 import com.example.owner.nt_taxi.Model.loginRootObject;
 import com.example.owner.nt_taxi.R;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_CANCELED;
-import static android.content.Context.MODE_PRIVATE;
 
 
-public class EditProfileFragment extends BaseFragment implements AdapterView.OnItemSelectedListener {
+public class EditProfileFragment extends BaseFragment implements OnMapReadyCallback,
+        GoogleMap.OnMapLongClickListener {
+    private final static int MY_PERMISSION_FINE_LOCATION = 101;
     private ImageView banar1;
     private Button BtnSaveChanges;
-    private com.example.owner.nt_taxi.View.customfonts.MyEditText Username, Email;
-    private com.example.owner.nt_taxi.View.customfonts.MyTextView job, number;
-    private Spinner spinner;
-    private String location;
+    private com.example.owner.nt_taxi.View.customfonts.MyEditText Username, Email, editNum;
+    private com.example.owner.nt_taxi.View.customfonts.MyTextView job, number, viewEmail;
     private int GALLERY = 1, CAMERA = 2;
     private Bitmap bitmap;
+    private GoogleMap googleMap;
+    private MapView mapView;
+    private String lat, lng;
 
 
     @Override
@@ -68,32 +86,51 @@ public class EditProfileFragment extends BaseFragment implements AdapterView.OnI
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         banar1 = view.findViewById(R.id.edit_banar1);
         BtnSaveChanges = view.findViewById(R.id.SaveBTN);
         Username = view.findViewById(R.id.Edit_name);
         Email = view.findViewById(R.id.Edit_email);
         job = view.findViewById(R.id.Edit_job);
-        number = view.findViewById(R.id.Edit_number);
+        number = view.findViewById(R.id.view_number);
+        editNum = view.findViewById(R.id.Edit_number);
+        viewEmail = view.findViewById(R.id.view_email);
 
-        Username.setText(constants_class.sharedPreferences.getString(constants_class.UserName, ""));
+        lat = constants_class.sharedPreferences.getString(constants_class.Lat, "");
+        lng = constants_class.sharedPreferences.getString(constants_class.Long, "");
+
+        Username.setText(constants_class.sharedPreferences.getString(constants_class.Name, ""));
         job.setText(constants_class.sharedPreferences.getString(constants_class.Category, ""));
-        number.setText(constants_class.sharedPreferences.getString(constants_class.Number, ""));
-        Email.setText(constants_class.sharedPreferences.getString(constants_class.Email, ""));
+
+        if (BuildConfig.category == 0) {
+            editNum.setVisibility(View.GONE);
+            viewEmail.setVisibility(View.GONE);
+            number.setText(constants_class.sharedPreferences.getString(constants_class.Number, ""));
+            Email.setText(constants_class.sharedPreferences.getString(constants_class.Email, ""));
+        } else {
+            number.setVisibility(View.GONE);
+            Email.setVisibility(View.GONE);
+            editNum.setText(constants_class.sharedPreferences.getString(constants_class.Number, ""));
+            viewEmail.setText(constants_class.sharedPreferences.getString(constants_class.Email, ""));
+        }
+
+
+
 
         forCircleImage(banar1, R.drawable.white);
         Picasso.with(getActivity())
                 .load("http://192.168.61.2/nt_taxi_BackEnd/" + constants_class.sharedPreferences.getString(constants_class.Image, ""))
                 .into(banar1);
 
-        spinner = view.findViewById(R.id.Edit_location_spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.governorate_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        bitmap = ((BitmapDrawable) banar1.getDrawable()).getBitmap();
+
+        mapView = view.findViewById(R.id.edit_location);
+        if (mapView != null) {
+            mapView.onCreate(null);
+            mapView.onResume();
+            mapView.getMapAsync(this);
+        }
+
 
         banar1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,44 +147,97 @@ public class EditProfileFragment extends BaseFragment implements AdapterView.OnI
             @Override
             public void onClick(View view) {
 
-                Services.Update_Profile(Email.getText().toString(), Username.getText().toString(),
-                        location, getStringImage(bitmap), new RequestCallback() {
-                            @Override
-                            public void Success(String response) {
+                if (BuildConfig.category == 0) {
+                    Services.Update_Profile(Email.getText().toString(), Username.getText().toString(),
+                            lat, lng, number.getText().toString(),
+                            getStringImage(bitmap), new RequestCallback() {
+                                @Override
+                                public void Success(String response) {
 
-                                loginRootObject Root = new Gson().fromJson(response, loginRootObject.class);
-                                if (Root.getSuccess() == 1) {
-                                    Toast.makeText(getActivity(), Root.getMessage(), Toast.LENGTH_LONG).show();
-                                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(constants_class.MyPREFERENCES, MODE_PRIVATE).edit();
-                                    editor.putString(constants_class.Token, Root.getInfo().get(0).getToken());
-                                    editor.putString(constants_class.UserName, Root.getInfo().get(0).getName());
-                                    editor.putString(constants_class.UserID, Root.getInfo().get(0).getId());
-                                    editor.putString(constants_class.Number, Root.getInfo().get(0).getNumber());
-                                    editor.putString(constants_class.Image, Root.getInfo().get(0).getImage());
-                                    editor.putString(constants_class.Email, Root.getInfo().get(0).getEmail());
-                                    editor.putString(constants_class.Location, Root.getInfo().get(0).getLocation());
-                                    editor.putString(constants_class.Category, Root.getInfo().get(0).getCategory());
-                                    editor.putBoolean(constants_class.isLoggedIn, true);
-                                    editor.apply();
+                                    loginRootObject Root = new Gson().fromJson(response, loginRootObject.class);
+                                    if (Root.getSuccess() == 1) {
+                                        Toast.makeText(getActivity(), Root.getMessage(), Toast.LENGTH_LONG).show();
+                                        editor.putString(constants_class.Token, Root.getInfo().get(0).getToken());
+                                        editor.putString(constants_class.Name, Root.getInfo().get(0).getName());
+                                        editor.putString(constants_class.ID, Root.getInfo().get(0).getId());
+                                        editor.putString(constants_class.Number, Root.getInfo().get(0).getNumber());
+                                        editor.putString(constants_class.Image, Root.getInfo().get(0).getImage());
+                                        editor.putString(constants_class.Email, Root.getInfo().get(0).getEmail());
+                                        editor.putString(constants_class.Lat, Root.getInfo().get(0).getLatitude());
+                                        editor.putString(constants_class.Long, Root.getInfo().get(0).getLongitude());
+                                        editor.putString(constants_class.Category, Root.getInfo().get(0).getCategory());
 
-                                    Fragment frag = new ProfileFragment();
-                                    FragmentManager FG = getFragmentManager();
-                                    FragmentTransaction FT = FG.beginTransaction();
-                                    FT.replace(R.id.Fragment, frag);
-                                    FT.commit();
+                                        editor.apply();
+
+                                        Fragment frag = new ProfileFragment();
+                                        FragmentManager FG = getFragmentManager();
+                                        FragmentTransaction FT = FG.beginTransaction();
+                                        FT.replace(R.id.Fragment, frag);
+                                        FT.commit();
 
 
-                                } else {
-                                    Toast.makeText(getActivity(), Root.getMessage(), Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(getActivity(), Root.getMessage(), Toast.LENGTH_LONG).show();
+                                        if (Root.getMessage().equals("Invalid Token !")) {
+                                            startActivity(new Intent(getActivity(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                            getActivity().finish();
+                                        }
+                                    }
+
                                 }
 
-                            }
+                                @Override
+                                public void Error(Exception ex) {
 
-                            @Override
-                            public void Error(Exception ex) {
+                                }
+                            }, getActivity());
+                } else {
+                    Services.Update_Profile(viewEmail.getText().toString(), Username.getText().toString(),
+                            lat, lng, editNum.getText().toString(),
+                            getStringImage(bitmap), new RequestCallback() {
+                                @Override
+                                public void Success(String response) {
 
-                            }
-                        }, getActivity());
+                                    loginRootObject Root = new Gson().fromJson(response, loginRootObject.class);
+                                    if (Root.getSuccess() == 1) {
+                                        Toast.makeText(getActivity(), Root.getMessage(), Toast.LENGTH_LONG).show();
+                                        editor.putString(constants_class.Token, Root.getInfo().get(0).getToken());
+                                        editor.putString(constants_class.Name, Root.getInfo().get(0).getName());
+                                        editor.putString(constants_class.ID, Root.getInfo().get(0).getId());
+                                        editor.putString(constants_class.Number, Root.getInfo().get(0).getNumber());
+                                        editor.putString(constants_class.Image, Root.getInfo().get(0).getImage());
+                                        editor.putString(constants_class.Email, Root.getInfo().get(0).getEmail());
+                                        editor.putString(constants_class.Lat, Root.getInfo().get(0).getLatitude());
+                                        editor.putString(constants_class.Long, Root.getInfo().get(0).getLongitude());
+                                        editor.putString(constants_class.Category, Root.getInfo().get(0).getCategory());
+
+                                        editor.apply();
+
+                                        Fragment frag = new ProfileFragment();
+                                        FragmentManager FG = getFragmentManager();
+                                        FragmentTransaction FT = FG.beginTransaction();
+                                        FT.replace(R.id.Fragment, frag);
+                                        FT.commit();
+
+
+                                    } else {
+                                        Toast.makeText(getActivity(), Root.getMessage(), Toast.LENGTH_LONG).show();
+                                        if (Root.getMessage().equals("Invalid Token !")) {
+                                            startActivity(new Intent(getActivity(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                            getActivity().finish();
+                                        }
+                                    }
+
+                                }
+
+                                @Override
+                                public void Error(Exception ex) {
+
+                                }
+                            }, getActivity());
+                }
+
+
             }
         });
     }
@@ -285,13 +375,97 @@ public class EditProfileFragment extends BaseFragment implements AdapterView.OnI
 
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        location = (String) adapterView.getItemAtPosition(i);
+    public void onMapReady(GoogleMap googleMap) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            MapsInitializer.initialize(getContext());
+        }
+
+        this.googleMap = googleMap;
+
+        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+        this.googleMap.getUiSettings().setCompassEnabled(true);
+        this.googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            //
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            googleMap.setMyLocationEnabled(true);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_FINE_LOCATION);
+            }
+        }
+
+        goToLocationZoom(Double.valueOf(lat), Double.valueOf(lng), 13);
+
+        this.googleMap.setOnMapLongClickListener(this);
+
+//        this.googleMap.getUiSettings().setAllGesturesEnabled(false);
+
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-        Toast.makeText(getActivity(), "Please choose you location", Toast.LENGTH_LONG).show();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        switch (requestCode) {
+            case MY_PERMISSION_FINE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        googleMap.setMyLocationEnabled(true);
+                    } else {
+                        Toast.makeText(getActivity(), "This App require location permission to be granted", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+                break;
+        }
+    }
+
+    private void goToLocationZoom(double lat, double lng, float zoom) {
+
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(lat, lng, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assert addresses != null;
+        String cityName = addresses.get(0).getAddressLine(0);
+        String stateName = addresses.get(0).getAddressLine(1);
+        String countryName = addresses.get(0).getAddressLine(2);
+
+
+        LatLng ll = new LatLng(lat, lng);
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.showInfoWindow();
+                return true;
+            }
+        });
+
+        googleMap.addMarker(new MarkerOptions().position(ll).title(stateName + " " + cityName + ", " + countryName))
+                .showInfoWindow();
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
+        googleMap.moveCamera(update);
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        googleMap.clear();
+        lat = String.valueOf(latLng.latitude);
+        lng = String.valueOf(latLng.longitude);
+        goToLocationZoom(latLng.latitude, latLng.longitude, 13);
     }
 }

@@ -24,9 +24,12 @@ public class loginInfoParser {
     @SerializedName("image")
     @Expose
     private String image;
-    @SerializedName("location")
+    @SerializedName("latitude")
     @Expose
-    private String location;
+    private String latitude;
+    @SerializedName("longitude")
+    @Expose
+    private String longitude;
     @SerializedName("category")
     @Expose
     private String category;
@@ -80,12 +83,20 @@ public class loginInfoParser {
         this.image = image;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
     public String getCategory() {

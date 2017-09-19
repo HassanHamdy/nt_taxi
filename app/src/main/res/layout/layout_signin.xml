@@ -48,47 +48,14 @@
     </android.support.design.widget.TextInputLayout>
 
 
-    <RadioGroup
-        android:id="@+id/signInUserCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/signInClient"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:buttonTint="#80FFFF00"
-            android:text="client"
-            android:textAlignment="center"
-            android:textColor="#80FFFF00"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-
-        <RadioButton
-            android:id="@+id/signInDriver"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:buttonTint="#80FFFF00"
-            android:text="driver"
-            android:textAlignment="center"
-            android:textColor="#80FFFF00"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-
-    </RadioGroup>
 
     <Button
         android:id="@+id/btnSignin"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="60dp"
         android:background="@null"
         android:text="Signin"
         android:textAlignment="center"

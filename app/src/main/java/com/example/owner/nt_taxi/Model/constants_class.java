@@ -4,15 +4,17 @@ package com.example.owner.nt_taxi.Model;
 import android.content.SharedPreferences;
 
 public class constants_class {
-    public static final String MyPREFERENCES = "LoginData";
-    public static final String UserID = "ID";
-    public static final String UserName = "Name";
+    public static final String MyPREFERENCES = "UserData";
+    public static final String DriverPREFERENCES = "DriverData";
+    public static final String ID = "ID";
+    public static final String Name = "Name";
     public static final String Token = "token";
     public static final String Number = "MobileNumber";
     public static final String isLoggedIn = "LoginIn";
     public static final String Image = "image";
     public static final String Email = "email";
-    public static final String Location = "location";
+    public static final String Lat = "latitude";
+    public static final String Long = "longitude";
     public static final String Category = "category";
     public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";

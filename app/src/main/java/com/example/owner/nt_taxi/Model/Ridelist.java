@@ -42,6 +42,9 @@ public class Ridelist {
     @SerializedName("accept")
     @Expose
     private String accept;
+    @SerializedName("tripCost")
+    @Expose
+    private double tripCost;
 
     public String getId() {
         return id;
@@ -137,6 +140,14 @@ public class Ridelist {
 
     public void setAccept(String accept) {
         this.accept = accept;
+    }
+
+    public double getCost() {
+        return tripCost;
+    }
+
+    public void setCost(double cost) {
+        this.tripCost = cost;
     }
 
 }

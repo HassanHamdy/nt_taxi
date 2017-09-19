@@ -7,7 +7,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -40,15 +39,12 @@ public class HomePage extends BaseActivity implements NavigationView.OnNavigatio
     private TextView userNameTxtView;
     private ImageView headerImage;
     //    private static final String IMAGE_DIRECTORY = "/nt_taxi";
-    private SharedPreferences.Editor editor;
+
     private NavigationView navigationView;
-    private View header;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        editor = getSharedPreferences(constants_class.MyPREFERENCES, MODE_PRIVATE).edit();
 
         menusItems = new ArrayList<>();
 
@@ -81,9 +77,9 @@ public class HomePage extends BaseActivity implements NavigationView.OnNavigatio
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        header = navigationView.getHeaderView(0);
+        View header = navigationView.getHeaderView(0);
         userNameTxtView = header.findViewById(R.id.usernameTextView);
-        userNameTxtView.setText(constants_class.sharedPreferences.getString(constants_class.UserName,""));
+        userNameTxtView.setText(constants_class.sharedPreferences.getString(constants_class.Name, ""));
         headerImage = header.findViewById(R.id.profile_image);
 
         Picasso.with(HomePage.this)

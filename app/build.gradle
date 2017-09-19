@@ -17,6 +17,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        Client {
+            buildConfigField("int", "category", "0")
+        }
+
+        Driver {
+            buildConfigField("int", "category", "1")
+        }
+
+
+    }
 }
 
 dependencies {

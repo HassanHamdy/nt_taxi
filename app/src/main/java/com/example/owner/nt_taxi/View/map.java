@@ -159,38 +159,6 @@ public class map extends BaseFragment implements OnMapReadyCallback, GoogleMap.O
         mDestinationAutocompleteView.setAdapter(mDestinationAdapter);
 
 
-//                // set the custom dialog components - text, image and button
-//                CurrentTxt = (TextView) dialog.findViewById(R.id.CurrentPlace);
-//                DestinationTxt = (TextView) dialog.findViewById(R.id.PlaceWantToGo);
-//
-//                CurrentTxt.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        try {
-//                            Intent intent =
-//                                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-//                                            .build(getActivity());
-//                            startActivityForResult(intent, PLACE_AUTOCOMPLETE_CURRENT_REQUEST_CODE);
-//                        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-//                            // TODO: Handle the error.
-//                        }
-//                    }
-//                });
-//
-//                DestinationTxt.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        try {
-//                            Intent intent =
-//                                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-//                                            .build(getActivity());
-//                            startActivityForResult(intent, PLACE_AUTOCOMPLETE_DESTINATION_REQUEST_CODE);
-//                        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-//                            // TODO: Handle the error.
-//                        }
-//                    }
-//                });
-//
         Button dialogButton = dialog.findViewById(R.id.GoToPlace);
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -328,14 +296,20 @@ public class map extends BaseFragment implements OnMapReadyCallback, GoogleMap.O
                 DriverLocations D_location = new Gson().fromJson(response,DriverLocations.class);
                 if(D_location.getSuccess() == 1){
                     locations = D_location.getLocation();
-                    for (int i = 0; i < D_location.getLocation().size(); ++i){
-                        AddMarker(Double.valueOf(locations.get(i).getLatitude()),Double.valueOf(locations.get(i).getLongitude())
-                                , locations.get(i).getName(), locations.get(i).getInfo());
+                    if (locations != null) {
+                        for (int i = 0; i < D_location.getLocation().size(); ++i) {
+                            AddMarker(Double.valueOf(locations.get(i).getLatitude()), Double.valueOf(locations.get(i).getLongitude())
+                                    , locations.get(i).getName(), locations.get(i).getInfo());
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Sorry there is no taxi", Toast.LENGTH_LONG).show();
                     }
+
 
                 }else {
                     Toast.makeText(getActivity(),"Invalid Token ..!",Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getActivity(),MainActivity.class));
+                    startActivity(new Intent(getActivity(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    getActivity().finish();
                 }
 
             }
@@ -491,7 +465,8 @@ public class map extends BaseFragment implements OnMapReadyCallback, GoogleMap.O
                         }else {
                             Services.requestTaxi(locations.get(Integer.parseInt(str)), FromLocation,
                                     ToLocation, new LatLng(myLoc.getLatitude(), myLoc.getLongitude()),
-                                    M_current.getPosition(), M_destination.getPosition(),
+                                    M_current.getPosition(), M_destination.getPosition(), totalDistance,
+                                    totalDuration,
                                     new RequestCallback() {
                                         @Override
                                         public void Success(String response) {
@@ -500,6 +475,10 @@ public class map extends BaseFragment implements OnMapReadyCallback, GoogleMap.O
                                                 Toast.makeText(getActivity(),"wait for driver accept", Toast.LENGTH_LONG).show();
                                             }else {
                                                 Toast.makeText(getActivity(),Root.getMessage(), Toast.LENGTH_LONG).show();
+                                                if (Root.getMessage().equals("Invalid Token !")) {
+                                                    startActivity(new Intent(getActivity(), MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                                    getActivity().finish();
+                                                }
                                             }
                                         }
 

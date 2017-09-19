@@ -3,18 +3,22 @@ package com.example.owner.nt_taxi.View;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.owner.nt_taxi.BuildConfig;
 import com.example.owner.nt_taxi.Model.constants_class;
 import com.example.owner.nt_taxi.R;
 
 public class splashScreen extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        constants_class.sharedPreferences = getSharedPreferences(constants_class.MyPREFERENCES,MODE_PRIVATE);
-
+        if (BuildConfig.category == 0) {
+            constants_class.sharedPreferences = getSharedPreferences(constants_class.MyPREFERENCES, MODE_PRIVATE);
+        } else {
+            constants_class.sharedPreferences = getSharedPreferences(constants_class.DriverPREFERENCES, MODE_PRIVATE);
+        }
 
         Thread thread = new Thread(){
             @Override
